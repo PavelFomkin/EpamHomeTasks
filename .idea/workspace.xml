@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f3376ac2-13a1-4cfe-bd54-9d64213d63a3" name="Default" comment="">
+    <list default="true" id="f3376ac2-13a1-4cfe-bd54-9d64213d63a3" name="Default" comment="attempt2 IDEA">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/src/com/company/homework1/Shape.java" afterPath="$PROJECT_DIR$/src/com/company/homework1/Shape.java" />
     </list>
@@ -29,7 +29,7 @@
         <entry file="file://$PROJECT_DIR$/src/com/company/homework1/Shape.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="85">
-              <caret line="5" column="43" lean-forward="false" selection-start-line="5" selection-start-column="43" selection-end-line="5" selection-end-column="43" />
+              <caret line="5" column="49" lean-forward="true" selection-start-line="5" selection-start-column="49" selection-end-line="5" selection-end-column="49" />
               <folding />
             </state>
           </provider>
@@ -213,7 +213,14 @@
       <option name="project" value="LOCAL" />
       <updated>1517221355135</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="attempt2 IDEA">
+      <created>1517221537687</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1517221537687</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -253,7 +260,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="attempt1 IDEA" />
-    <option name="LAST_COMMIT_MESSAGE" value="attempt1 IDEA" />
+    <MESSAGE value="attempt2 IDEA" />
+    <option name="LAST_COMMIT_MESSAGE" value="attempt2 IDEA" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -342,7 +350,7 @@
     <entry file="file://$PROJECT_DIR$/src/com/company/homework1/Shape.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
-          <caret line="5" column="43" lean-forward="false" selection-start-line="5" selection-start-column="43" selection-end-line="5" selection-end-column="43" />
+          <caret line="5" column="49" lean-forward="true" selection-start-line="5" selection-start-column="49" selection-end-line="5" selection-end-column="49" />
           <folding />
         </state>
       </provider>
