@@ -6,5 +6,7 @@ public class Shape {
         System.out.println("Hello world!");
         System.out.println("Hello world!");
         System.out.println("Hello world!");
+        System.out.println("Hello world!");
+        System.out.println("Hello world!");
     }
 }
