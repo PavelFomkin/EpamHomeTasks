@@ -5,7 +5,16 @@ import java.util.Arrays;
 class Main{
     public static void main(String[] args) {
 
-        new CoinsExpert().detectFake();
+        //for checking homework2.
+        Matrix myMatrix = new Matrix(5,7);
+        myMatrix.printMatrix();
+        System.out.println();
+        myMatrix.printSpirally();
+
+        //for checking a random variant. (task with 12 coins)
+//        new CoinsExpert().detectFake();
+
+        // for checking all variants. (task with 12 coins)
 //        CoinsExpert myCoins = new CoinsExpert();
 //        int value =1;
 //        for (int i=0; i<2; i++){
