@@ -1,9 +1,0 @@
-<application>
-  <component name="ParameterNameHintsSettings">
-    <blacklists>
-      <blacklist language="Java">
-        <added pattern="homework2.CoinsExpert.changeByMyself(index,value)" />
-      </blacklist>
-    </blacklists>
-  </component>
-</application>
