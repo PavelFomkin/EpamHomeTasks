@@ -17,11 +17,7 @@ public class Matrix {
     void printMatrix(){
         for (int[] anArr : arr) {
             for (int anAnArr : anArr) {
-                if (anAnArr > 9) {
-                    System.out.print(anAnArr + " ");
-                } else {
-                    System.out.print(anAnArr + "  ");
-                }
+                System.out.print(anAnArr + "\t");
             }
             System.out.println();
         }
