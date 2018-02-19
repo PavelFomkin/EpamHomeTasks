@@ -1,0 +1,152 @@
+package homework3;
+
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Scanner;
+
+class Mp3Manager {
+    private MyDirectory from;
+    private MyDirectory to;
+    Mp3Manager(MyDirectory from, MyDirectory to){
+        this.from = from;
+        this.to = to;
+    }
+    private boolean isMusicFile(Path path){
+        if(!Files.exists(path)){
+            System.out.println("\""+path.getFileName().toString()+"\" was pointed wrong.");
+        }
+        else if(!Files.isRegularFile(path)){
+            System.out.println("\""+path.getFileName().toString()+"\" isn't regular file.");
+        }
+        try {
+            if(Files.isReadable(path) && Files.size(from.getPath())<=1048576){
+                return path.getFileName().toString().matches("^f_[a-zA-Z0-9]+");
+            }
+        } catch (IOException e) {
+            System.out.println("You don't have permission to read this file.");
+        }
+        return false;
+    }
+    private boolean renameToMp3(String label){
+        Path currentSong = Paths.get(from.getPath().toString(),label);
+        if(isMusicFile(currentSong)){
+            Path pathCopy = Paths.get(to.getPath().toString(),label+".mp3");
+            try {
+                Files.copy(currentSong,pathCopy);
+                return true;
+            } catch (IOException e) {
+                System.out.println("The mp3 file \""+label+".mp3\" has already exist");
+                return false;
+            }
+        }
+        else{
+            System.out.println("\""+label+"\" doesn't similar to mp3 file.");
+            return false;
+        }
+    }
+    private void renameEachMusicFileToMp3(){
+        int files = 0;
+        int mp3Files = 0;
+        try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(from.getPath())) {
+            for (Path song : dirStream){
+                if (renameToMp3(song.getFileName().toString())){
+                   mp3Files++;
+                }
+                files++;
+            }
+        } catch (IOException e) {
+            System.out.println("The connection is broken.");
+        } finally {
+            System.out.println("Number of files: "+files);
+            System.out.println("Number of renamed files to mp3: "+mp3Files);
+        }
+    }
+    void start(){
+        Scanner scanner = new Scanner(System.in);
+        boolean exit = false;
+        System.out.println("Use the commands to work with this application. For help, type - \"help\".");
+        while(!exit){
+            String command = scanner.nextLine();
+            String useCommand = command.toLowerCase();
+            String secondPart = "";
+            if (command.contains(" ")){
+                useCommand = command.substring(0,command.indexOf(" ")).toLowerCase();
+                secondPart = command.substring(command.indexOf(" ")).trim();
+            }
+            switch(useCommand){
+                case ("edit_path"):
+                    switch(secondPart){
+                        case ("cache"):
+                            from.settings();
+                            break;
+                        case ("mp3"):
+                            to.settings();
+                            break;
+                        default:
+                            System.out.println("Not correct. Use the names \"cache\" or \"mp3\".");
+                    }
+                    break;
+                case ("cd"):
+                    switch(secondPart){
+                        case ("cache"):
+                            from.showCurrentDirectory();
+                            break;
+                        case ("mp3"):
+                            to.showCurrentDirectory();
+                            break;
+                        default:
+                            from.showCurrentDirectory();
+                            to.showCurrentDirectory();
+                    }
+                    break;
+                case ("list"):
+                    switch(secondPart){
+                        case ("cache"):
+                            from.printFiles();
+                            break;
+                        case ("mp3"):
+                            to.printFiles();
+                            break;
+                        default:
+                            System.out.println("Not correct. Use the names \"cache\" or \"mp3\".");
+                    }
+                    break;
+                case ("rename"):
+                    switch (secondPart) {
+                        case ("all"):
+                            renameEachMusicFileToMp3();
+                            break;
+                        case (""):
+                            System.out.println("You need to point the name of the file or use \"all\"");
+                            break;
+                        default:
+                            renameToMp3(secondPart);
+                            break;
+                    }
+                    break;
+                case ("help"):
+                    System.out.println("List of commands:");
+                    System.out.println("\"edit_path cache\" - Edit the "+from.getName()+".");
+                    System.out.println("\"edit_path mp3\" - Edit the "+to.getName()+".");
+                    System.out.println("\"cd cache\" - Show the "+from.getName()+".");
+                    System.out.println("\"cd mp3\" - Show the "+to.getName()+".");
+                    System.out.println("\"cd\" - Show the both paths.");
+                    System.out.println("\"list cache\" - Show list of files inside the "+from.getName()+".");
+                    System.out.println("\"list mp3\" - Show list of files inside the "+to.getName()+".");
+                    System.out.println("\"rename #name\" - Copy certain \"music\" file to "+to.getName()+" and rename it to mp3.");
+                    System.out.println("\"rename all\" - Copy all \"music\" files to "+to.getName()+" and rename them to mp3.");
+                    System.out.println("\"help\" - Show list of commands.");
+                    System.out.println("\"exit\" - The end of the settings for current path.");
+                    break;
+                case ("exit"):
+                    exit=true;
+                    break;
+                default:
+                    System.out.println("Wrong command. Type \"help\" to look at list of commands.");
+            }
+        }
+    }
+}
