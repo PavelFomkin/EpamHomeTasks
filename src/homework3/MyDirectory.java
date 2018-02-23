@@ -38,7 +38,7 @@ class MyDirectory {
                         showCurrentDirectory();
                         answer = true;
                     } else {
-                        System.out.println("Please enter Y or N.");
+                        System.out.println("Please type Y or N.");
                     }
                 }
             }
@@ -66,49 +66,28 @@ class MyDirectory {
         }
         return path;
     }
-    private void changeRoot(String label){
-        Pattern pattern = Pattern.compile("^[A-Z]?:?[/]+$");
-        if(!pattern.matcher(label).matches()){
-            System.out.println("Invalid name.");
-        }
-        else{
-            if (Files.isDirectory(Paths.get(label))) {
-                currentPath = Paths.get(label);
-                System.out.println("The "+name+" was changed.");
-                showCurrentDirectory();
-            }
-            else{
-                System.out.println("Such root of directory doesn't exist.");
-            }
-        }
-    }
-    private void changeDirectory(String label){
+    private void changeDirectory(String path) {
         Pattern pattern = Pattern.compile("^[a-zA-Z0-9_/. ]+");
-        if(!pattern.matcher(label).matches()){
-            System.out.println("Invalid name. Don't use next symbols: \\ @ $ # ^ % etc.");
-        }
-        else{
-            if (Files.isDirectory(Paths.get(currentPath.toAbsolutePath().getRoot().toString(),label))) {
-                currentPath = Paths.get(currentPath.toAbsolutePath().getRoot().toString(),label);
-                System.out.println("The "+name+" was changed.");
-                showCurrentDirectory();
-            }
-            else{
-                System.out.println("The "+name+" was pointed wrong.");
-            }
-        }
-    }
-    private void toDirectory(String path) {
-        Pattern pattern = Pattern.compile("^[a-zA-Z0-9/_. ]+$");
         if(!pattern.matcher(path).matches()){
-            System.out.println("The "+name+" was pointed wrong.");
-        } else {
+            Pattern pattern2 = Pattern.compile("^[A-Z]:/.*");
+            if (pattern2.matcher(path).matches()) {
+                if (Files.isDirectory(Paths.get(path))) {
+                    currentPath = Paths.get(path);
+                    System.out.println("The " + name + " was changed.");
+                    showCurrentDirectory();
+                } else {
+                    System.out.println("Invalid name. Don't use next symbols: \\ @ $ # ^ % \" ' etc.");
+                }
+            }
+        }
+        else {
             Path newPath = Paths.get(currentPath.toAbsolutePath().toString(), path);
-            if (Files.isDirectory(newPath)) {
+            if (Files.isDirectory(newPath)){
                 currentPath = newPath;
                 System.out.println("The "+name+" was changed.");
                 showCurrentDirectory();
-            } else {
+            }
+            else {
                 if (Files.exists(newPath)){
                     System.out.println("\""+path+"\" isn't a directory.");
                 }
@@ -118,7 +97,7 @@ class MyDirectory {
             }
         }
     }
-    private void downFromDirectory(){
+    private void fromDirectory(){
         if (currentPath.toString().equals(currentPath.toAbsolutePath().getRoot().toString())){
             System.out.println("It's impossible, it is the root of the "+name+".");;
         }
@@ -139,7 +118,7 @@ class MyDirectory {
                 try {
                     Files.createDirectories(newPath);
                     System.out.println("The "+name+" created.");
-                    toDirectory(label);
+                    changeDirectory(label);
                 } catch (IOException e) {
                     System.out.println("The connection is broken.");
                 }
@@ -215,72 +194,57 @@ class MyDirectory {
                 useCommand = command.substring(0,command.indexOf(" ")).toLowerCase();
                 secondPart = command.substring(command.indexOf(" ")).trim();
             }
-            switch(useCommand){
-                case ("change_root"):
-                    if (secondPart.equals("")){
-                        System.out.println("You need to point the root of directory.");
-                        break;
-                    }else{
-                        changeRoot(secondPart);
-                        break;
-                    }
-                case ("change"):
-                    if (secondPart.equals("")){
-                        System.out.println("You need to point the name of the directory");
-                        break;
-                    }else{
-                        changeDirectory(secondPart);
-                        break;
-                    }
-                case ("to"):
-                    if (secondPart.equals("")){
-                        System.out.println("You need to point the name of the directory");
-                        break;
-                    }
-                    toDirectory(secondPart);
+            label:
+            switch (useCommand) {
+                case ("dir"):
+                    showCurrentDirectory();
                     break;
-                case ("down"):
-                    downFromDirectory();
+                case ("cd"):
+                    switch (secondPart) {
+                        case "":
+                            System.out.println("You need to point the name of the directory");
+                            break label;
+                        case "..":
+                            fromDirectory();
+                            break label;
+                        default:
+                            changeDirectory(secondPart);
+                            break label;
+                    }
+                case ("files"):
+                    printFiles();
+                    break;
+                case ("tree"):
+                    printTree(currentPath, 0);
                     break;
                 case ("create"):
-                    if (secondPart.equals("")){
+                    if (secondPart.equals("")) {
                         System.out.println("You need to point the name of the directory");
                         break;
                     }
                     createDirectory(secondPart);
                     break;
-                case ("del"):
-                    if (secondPart.equals("")){
+                case ("delete"):
+                    if (secondPart.equals("")) {
                         System.out.println("You need to point the name of the directory");
                         break;
                     }
                     deleteDirectory(secondPart);
                     break;
-                case ("cd"):
-                    showCurrentDirectory();
-                    break;
-                case ("list"):
-                    printFiles();
-                    break;
-                case ("tree"):
-                    printTree(currentPath,0);
-                    break;
                 case ("help"):
                     System.out.println("The list of the commands:");
-                    System.out.println("\"change_root #directory\" - Change the root of the directory.");
-                    System.out.println("\"change #directory\" - Change current directory. Point the directory without root.");
-                    System.out.println("\"cd\" - Show the "+name+".");
-                    System.out.println("\"to #path\" or \"to #path/path/path\" - One or more steps deeper to current directory.");
-                    System.out.println("\"down\" - One step down from current directory.");
-                    System.out.println("\"list\" - Show list of files inside current directory.");
+                    System.out.println("\"dir\" - Show the " + name + ".");
+                    System.out.println("\"cd #path\" - Change the "+ name +".");
+                    System.out.println("\"cd ..\" - One step from current directory.");
+                    System.out.println("\"files\" - Show list of files inside current directory.");
                     System.out.println("\"tree\" - Show tree of files inside current directory.");
                     System.out.println("\"create #name\" or \"create #name/name/name\" - Create one or more directories inside current directory.");
-                    System.out.println("\"del #name\" - Delete a directory inside current directory. It must be empty to delete.");
+                    System.out.println("\"delete #name\" - Delete a directory inside current directory. It must be empty to delete.");
                     System.out.println("\"help\" - Show the list of the commands.");
                     System.out.println("\"back\" - The end of the settings for current path.");
                     break;
                 case ("back"):
-                    back=true;
+                    back = true;
                     break;
                 default:
                     System.out.println("The command is wrong. Type \"help\" to look at list of commands.");

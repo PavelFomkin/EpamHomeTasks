@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 
 class Mp3Manager {
+    private static final int MAX_SIZE_OF_PART = 1048576;
     private MyDirectory from;
     private MyDirectory to;
     Mp3Manager(MyDirectory from, MyDirectory to){
@@ -22,7 +23,7 @@ class Mp3Manager {
             System.out.println("\""+path.getFileName().toString()+"\" isn't regular file.");
         }
         try {
-            if(Files.isReadable(path) && Files.size(from.getPath())<=1048576){
+            if(Files.isReadable(path) && Files.size(from.getPath())<= MAX_SIZE_OF_PART){
                 return path.getFileName().toString().matches("^f_[a-zA-Z0-9]+");
             }
         } catch (IOException e) {
@@ -77,7 +78,7 @@ class Mp3Manager {
                 secondPart = command.substring(command.indexOf(" ")).trim();
             }
             switch(useCommand){
-                case ("edit_path"):
+                case ("edit_dir"):
                     switch(secondPart){
                         case ("cache"):
                             from.settings();
@@ -89,7 +90,7 @@ class Mp3Manager {
                             System.out.println("Not correct. Use the names \"cache\" or \"mp3\".");
                     }
                     break;
-                case ("cd"):
+                case ("dir"):
                     switch(secondPart){
                         case ("cache"):
                             from.showCurrentDirectory();
@@ -102,7 +103,7 @@ class Mp3Manager {
                             to.showCurrentDirectory();
                     }
                     break;
-                case ("list"):
+                case ("files"):
                     switch(secondPart){
                         case ("cache"):
                             from.printFiles();
@@ -129,17 +130,17 @@ class Mp3Manager {
                     break;
                 case ("help"):
                     System.out.println("List of commands:");
-                    System.out.println("\"edit_path cache\" - Edit the "+from.getName()+".");
-                    System.out.println("\"edit_path mp3\" - Edit the "+to.getName()+".");
-                    System.out.println("\"cd cache\" - Show the "+from.getName()+".");
-                    System.out.println("\"cd mp3\" - Show the "+to.getName()+".");
-                    System.out.println("\"cd\" - Show the both paths.");
-                    System.out.println("\"list cache\" - Show list of files inside the "+from.getName()+".");
-                    System.out.println("\"list mp3\" - Show list of files inside the "+to.getName()+".");
+                    System.out.println("\"edit_dir cache\" - Edit the "+from.getName()+".");
+                    System.out.println("\"edit_dir mp3\" - Edit the "+to.getName()+".");
+                    System.out.println("\"dir cache\" - Show the "+from.getName()+".");
+                    System.out.println("\"dir mp3\" - Show the "+to.getName()+".");
+                    System.out.println("\"dir\" - Show the both paths.");
+                    System.out.println("\"files cache\" - Show list of files inside the "+from.getName()+".");
+                    System.out.println("\"files mp3\" - Show list of files inside the "+to.getName()+".");
                     System.out.println("\"rename #name\" - Copy certain \"music\" file to "+to.getName()+" and rename it to mp3.");
                     System.out.println("\"rename all\" - Copy all \"music\" files to "+to.getName()+" and rename them to mp3.");
                     System.out.println("\"help\" - Show list of commands.");
-                    System.out.println("\"exit\" - The end of the settings for current path.");
+                    System.out.println("\"exit\" - The end of the application.");
                     break;
                 case ("exit"):
                     exit=true;
