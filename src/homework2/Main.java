@@ -1,17 +1,15 @@
 package homework2;
 
-import java.util.Arrays;
-
 class Main{
     public static void main(String[] args) {
 
-        //for checking homework2.
+        // for checking homework2.
         Matrix myMatrix = new Matrix(5,7);
         myMatrix.printMatrix();
         System.out.println();
         myMatrix.printSpirally();
 
-        //for checking a random variant. (task with 12 coins)
+        // for checking a random variant. (task with 12 coins)
 //        new CoinsExpert().detectFake();
 
         // for checking all variants. (task with 12 coins)
@@ -25,5 +23,10 @@ class Main{
 //            }
 //            value = 3;
 //        }
+
+        // for checking task about 12 coins.
+//        CoinsExpert test = new CoinsExpert();
+//        test.printArray();
+//        test.detectFake();
     }
 }

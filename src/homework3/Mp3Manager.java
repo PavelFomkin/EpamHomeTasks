@@ -68,7 +68,7 @@ class Mp3Manager {
     void start(){
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
-        System.out.println("Use the commands to work with this application. For help, type - \"help\".");
+        System.out.println("The application has its own list of commands. Type - \"help\" for to look into.");
         while(!exit){
             String command = scanner.nextLine();
             String useCommand = command.toLowerCase();
@@ -78,8 +78,12 @@ class Mp3Manager {
                 secondPart = command.substring(command.indexOf(" ")).trim();
             }
             switch(useCommand){
-                case ("edit_dir"):
+                case ("cd"):
                     switch(secondPart){
+                        case "":
+                            from.showCurrentDirectory();
+                            to.showCurrentDirectory();
+                            break;
                         case ("cache"):
                             from.settings();
                             break;
@@ -87,23 +91,10 @@ class Mp3Manager {
                             to.settings();
                             break;
                         default:
-                            System.out.println("Not correct. Use the names \"cache\" or \"mp3\".");
+                            System.out.println("Use \"cache\" or \"mp3\" to edit a directory.");
                     }
                     break;
                 case ("dir"):
-                    switch(secondPart){
-                        case ("cache"):
-                            from.showCurrentDirectory();
-                            break;
-                        case ("mp3"):
-                            to.showCurrentDirectory();
-                            break;
-                        default:
-                            from.showCurrentDirectory();
-                            to.showCurrentDirectory();
-                    }
-                    break;
-                case ("files"):
                     switch(secondPart){
                         case ("cache"):
                             from.printFiles();
@@ -112,10 +103,10 @@ class Mp3Manager {
                             to.printFiles();
                             break;
                         default:
-                            System.out.println("Not correct. Use the names \"cache\" or \"mp3\".");
+                            System.out.println("Use \"cache\" or \"mp3\" to print files inside a directory.");
                     }
                     break;
-                case ("rename"):
+                case ("move"):
                     switch (secondPart) {
                         case ("all"):
                             renameEachMusicFileToMp3();
@@ -130,15 +121,13 @@ class Mp3Manager {
                     break;
                 case ("help"):
                     System.out.println("List of commands:");
-                    System.out.println("\"edit_dir cache\" - Edit the "+from.getName()+".");
-                    System.out.println("\"edit_dir mp3\" - Edit the "+to.getName()+".");
-                    System.out.println("\"dir cache\" - Show the "+from.getName()+".");
-                    System.out.println("\"dir mp3\" - Show the "+to.getName()+".");
-                    System.out.println("\"dir\" - Show the both paths.");
-                    System.out.println("\"files cache\" - Show list of files inside the "+from.getName()+".");
-                    System.out.println("\"files mp3\" - Show list of files inside the "+to.getName()+".");
-                    System.out.println("\"rename #name\" - Copy certain \"music\" file to "+to.getName()+" and rename it to mp3.");
-                    System.out.println("\"rename all\" - Copy all \"music\" files to "+to.getName()+" and rename them to mp3.");
+                    System.out.println("\"cd\" - Show the directories' paths.");
+                    System.out.println("\"cd cache\" - Edit the "+from.getName()+".");
+                    System.out.println("\"cd mp3\" - Edit the "+to.getName()+".");
+                    System.out.println("\"dir cache\" - Show list of files inside the "+from.getName()+".");
+                    System.out.println("\"dir mp3\" - Show list of files inside the "+to.getName()+".");
+                    System.out.println("\"move #name\" - Copy certain \"music\" file to "+to.getName()+" and rename it to mp3.");
+                    System.out.println("\"move all\" - Copy all \"music\" files to "+to.getName()+" and rename them to mp3.");
                     System.out.println("\"help\" - Show list of commands.");
                     System.out.println("\"exit\" - The end of the application.");
                     break;

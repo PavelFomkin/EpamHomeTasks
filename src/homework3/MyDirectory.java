@@ -17,35 +17,9 @@ class MyDirectory {
         this.name = name;
         this.permissionCreateDirectory = permissionCreateDirectory;
         if (!Files.exists(currentPath) && !Files.isDirectory(currentPath)){
-            System.out.println("Unfortunately, the default "+name+" was pointed wrong.");
-            if(!permissionCreateDirectory){
-                currentPath = Paths.get(searchExistsDirectory(currentPath).toString());
-                showCurrentDirectory();
-            }
-            else{
-                System.out.println("Do you want to create a "+name+" with path: "+currentPath.toString()+"? Y/N");
-                Scanner scanner = new Scanner(System.in);
-                boolean answer = false;
-                while (!answer) {
-                    String currentAnswer = scanner.next().trim();
-                    if (currentAnswer.equalsIgnoreCase("Y")) {
-                        String label = currentPath.getFileName().toString();
-                        currentPath = Paths.get(currentPath.getParent().toString());
-                        createDirectory(label);
-                        answer = true;
-                    } else if (currentAnswer.equalsIgnoreCase("N")) {
-                        currentPath = Paths.get(searchExistsDirectory(currentPath).toString());
-                        showCurrentDirectory();
-                        answer = true;
-                    } else {
-                        System.out.println("Please type Y or N.");
-                    }
-                }
-            }
+            currentPath = Paths.get(searchExistsDirectory(currentPath).toString());
         }
-        else{
-            showCurrentDirectory();
-        }
+        showCurrentDirectory();
     }
     Path getPath() {
         return currentPath;
@@ -148,7 +122,7 @@ class MyDirectory {
                 }
             }
             else{
-                System.out.println("Can't find this directory in current.");
+                System.out.println("Can't find this directory in current directory.");
             }
         }
     }
@@ -185,7 +159,7 @@ class MyDirectory {
     void settings(){
         Scanner scanner = new Scanner(System.in);
         boolean back = false;
-        System.out.println("Use the commands to change this directory. For help, type - \"help\".");
+        System.out.println("Type - \"help\" for to look into the list of commands for changing the directory.");
         while(!back){
             String command = scanner.nextLine();
             String useCommand = command.toLowerCase();
@@ -194,37 +168,39 @@ class MyDirectory {
                 useCommand = command.substring(0,command.indexOf(" ")).toLowerCase();
                 secondPart = command.substring(command.indexOf(" ")).trim();
             }
-            label:
             switch (useCommand) {
-                case ("dir"):
-                    showCurrentDirectory();
-                    break;
                 case ("cd"):
                     switch (secondPart) {
                         case "":
-                            System.out.println("You need to point the name of the directory");
-                            break label;
+                            showCurrentDirectory();
+                            break;
                         case "..":
                             fromDirectory();
-                            break label;
+                            break;
+                        case "/":
+                            currentPath = currentPath.getRoot();
+                            System.out.println("The "+name+" was changed.");
+                            showCurrentDirectory();
+                            break;
                         default:
                             changeDirectory(secondPart);
-                            break label;
+                            break;
                     }
-                case ("files"):
+                    break;
+                case ("dir"):
                     printFiles();
                     break;
                 case ("tree"):
                     printTree(currentPath, 0);
                     break;
-                case ("create"):
+                case ("md"):
                     if (secondPart.equals("")) {
                         System.out.println("You need to point the name of the directory");
                         break;
                     }
                     createDirectory(secondPart);
                     break;
-                case ("delete"):
+                case ("rd"):
                     if (secondPart.equals("")) {
                         System.out.println("You need to point the name of the directory");
                         break;
@@ -232,16 +208,17 @@ class MyDirectory {
                     deleteDirectory(secondPart);
                     break;
                 case ("help"):
-                    System.out.println("The list of the commands:");
-                    System.out.println("\"dir\" - Show the " + name + ".");
-                    System.out.println("\"cd #path\" - Change the "+ name +".");
+                    System.out.println("List of commands:");
+                    System.out.println("\"cd\" - Show the " + name + ".");
                     System.out.println("\"cd ..\" - One step from current directory.");
-                    System.out.println("\"files\" - Show list of files inside current directory.");
+                    System.out.println("\"cd /\" - Change current directory to the root directory.");
+                    System.out.println("\"cd #path\" - Change the "+ name +".");
+                    System.out.println("\"dir\" - Show list of files inside current directory.");
                     System.out.println("\"tree\" - Show tree of files inside current directory.");
-                    System.out.println("\"create #name\" or \"create #name/name/name\" - Create one or more directories inside current directory.");
-                    System.out.println("\"delete #name\" - Delete a directory inside current directory. It must be empty to delete.");
-                    System.out.println("\"help\" - Show the list of the commands.");
-                    System.out.println("\"back\" - The end of the settings for current path.");
+                    System.out.println("\"md #name\" - Create one or more directories inside current directory.");
+                    System.out.println("\"rd #name\" - Delete the directory inside current directory. It must be empty to delete.");
+                    System.out.println("\"help\" - Show list of commands.");
+                    System.out.println("\"back\" - The end of the settings for current directory.");
                     break;
                 case ("back"):
                     back = true;

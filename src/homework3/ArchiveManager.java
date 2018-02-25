@@ -152,7 +152,7 @@ public class ArchiveManager {
     void start(){
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
-        System.out.println("Use the commands to work with this application. For help, type - \"help\".");
+        System.out.println("The application has its own list of commands. Type - \"help\" for to look into.");
         while(!exit){
             String command = scanner.nextLine();
             String useCommand = command.toLowerCase();
@@ -162,8 +162,12 @@ public class ArchiveManager {
                 secondPart = command.substring(command.indexOf(" ")).trim();
             }
             switch(useCommand){
-                case ("edit_dir"):
+                case ("cd"):
                     switch(secondPart){
+                        case (""):
+                            from.showCurrentDirectory();
+                            to.showCurrentDirectory();
+                            break;
                         case ("start"):
                             from.settings();
                             break;
@@ -171,23 +175,10 @@ public class ArchiveManager {
                             to.settings();
                             break;
                         default:
-                            System.out.println("Not correct. Use the names \"start\" or \"end\".");
+                            System.out.println("Use \"start\" or \"end\" to edit a directory.");
                     }
                     break;
                 case ("dir"):
-                    switch(secondPart){
-                        case ("start"):
-                            from.showCurrentDirectory();
-                            break;
-                        case ("end"):
-                            to.showCurrentDirectory();
-                            break;
-                        default:
-                            from.showCurrentDirectory();
-                            to.showCurrentDirectory();
-                    }
-                    break;
-                case ("files"):
                     switch(secondPart){
                         case ("start"):
                             from.printFiles();
@@ -196,7 +187,7 @@ public class ArchiveManager {
                             to.printFiles();
                             break;
                         default:
-                            System.out.println("Not correct. Use the names \"start\" or \"end\".");
+                            System.out.println("Use \"start\" or \"end\" to print files inside a directory.");
                     }
                     break;
                 case ("add"):
@@ -225,7 +216,7 @@ public class ArchiveManager {
                         decompressed(secondPart);
                         break;
                     }
-                case ("deleteFilesAfterWork"):
+                case ("delFilesAfterWork"):
                     switch(secondPart){
                         case ("true"):
                             deleteFiles = true;
@@ -239,19 +230,17 @@ public class ArchiveManager {
                     break;
                 case ("help"):
                     System.out.println("List of commands:");
-                    System.out.println("\"edit_dir start\" - Edit the "+from.getName()+".");
-                    System.out.println("\"edit_dir end\" - Edit the "+to.getName()+".");
-                    System.out.println("\"dir start\" - Show the "+from.getName()+".");
-                    System.out.println("\"dir end\" - Show the "+to.getName()+".");
-                    System.out.println("\"dir\" - Show the both directories.");
-                    System.out.println("\"files start\" - Show list of files inside the "+from.getName()+".");
-                    System.out.println("\"files end\" - Show list of files inside the "+to.getName()+".");
+                    System.out.println("\"cd\" - Show the directories' paths.");
+                    System.out.println("\"cd start\" - Edit the "+from.getName()+".");
+                    System.out.println("\"cd end\" - Edit the "+to.getName()+".");
+                    System.out.println("\"dir start\" - Show list of files inside the "+from.getName()+".");
+                    System.out.println("\"dir end\" - Show list of files inside the "+to.getName()+".");
                     System.out.println("\"add #file_name\" - Add a file to the files cloud for archiving.");
                     System.out.println("\"cloud\" - Show the files inside the files cloud.");
                     System.out.println("\"clear\" - Clear the files inside the files cloud.");
                     System.out.println("\"compress\" - Put clouds files to ZIP archive.");
                     System.out.println("\"decompress #archive_name\" - Put archives files to \""+to.getName()+"\".");
-                    System.out.println("\"deleteFilesAfterWork true\" or \"false\" - It's extra setting.");
+                    System.out.println("\"deleteFilesAfterWork true\" or \"... false\" - It's extra setting.");
                     System.out.println("\"help\" - Show list of commands.");
                     System.out.println("\"exit\" - The end of the application.");
                     break;
