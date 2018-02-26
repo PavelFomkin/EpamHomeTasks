@@ -43,16 +43,16 @@ class MyDirectory {
     private void changeDirectory(String path) {
         Pattern pattern = Pattern.compile("^[a-zA-Z0-9_/. ]+");
         if(!pattern.matcher(path).matches()){
-            Pattern pattern2 = Pattern.compile("^[A-Z]:/.*");
+            Pattern pattern2 = Pattern.compile("^[A-Z]:/[a-zA-Z0-9_/. ]*");
             if (pattern2.matcher(path).matches()) {
                 if (Files.isDirectory(Paths.get(path))) {
                     currentPath = Paths.get(path);
                     System.out.println("The " + name + " was changed.");
                     showCurrentDirectory();
-                } else {
-                    System.out.println("Invalid name. Don't use next symbols: \\ @ $ # ^ % \" ' etc.");
+                    return;
                 }
             }
+            System.out.println("Invalid name. Don't use next symbols: \\ @ $ # ^ % \" ' etc.");
         }
         else {
             Path newPath = Paths.get(currentPath.toAbsolutePath().toString(), path);
