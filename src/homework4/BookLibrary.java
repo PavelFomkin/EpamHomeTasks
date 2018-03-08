@@ -4,6 +4,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 class BookLibrary implements KeeperOfBooks{
@@ -33,7 +35,7 @@ class BookLibrary implements KeeperOfBooks{
 
     public Book getBook(int BookNumber) {
         int index = BookNumber-1;
-        if (index < 0 || index > books.size()) {
+        if (index < 0 || index >= books.size()) {
             return null;
         }
         return books.get(index);
@@ -81,11 +83,11 @@ class BookLibrary implements KeeperOfBooks{
     private Object buildFile(String metadata){
         String[] infoArr = metadata.split("\t");
         if(Book.TYPE.equals(infoArr[0])){
-            Book book = new Book(infoArr[1],infoArr[2]);
-            if(this.getUniqueValue().equals(infoArr[3])){
+            Book book = new Book(infoArr[1],infoArr[2],infoArr[3]);
+            if(this.getUniqueValue().equals(infoArr[4])){
                 book.setKeeper(this);
             } else {
-                int id = Integer.parseInt(infoArr[3]);
+                int id = Integer.parseInt(infoArr[4]);
                 UserOfLibrary user = defineKeeper(id);
                 if(user == null){
                     System.out.println("The book \""+book.getTitle()+"\" has no keeper.");
@@ -93,6 +95,8 @@ class BookLibrary implements KeeperOfBooks{
                 }
                 book.setKeeper(defineKeeper(id));
             }
+            book.setDateOfCreation(LocalDateTime.parse(infoArr[5]));
+            book.setDateOfLastChange(LocalDateTime.parse(infoArr[6]));
             return book;
         }
         else if (UserOfLibrary.TYPE.equals(infoArr[0])){
@@ -139,6 +143,7 @@ class BookLibrary implements KeeperOfBooks{
         try (FileWriter fileWriter = new FileWriter(PATH_TO_LIBRARY.toFile(),true)){
             fileWriter.write(book.toString()+'\n');
             fileWriter.flush();
+            book.setDateOfLastChange(LocalDateTime.now());
             books.add(book);
         } catch (IOException e) {
             e.printStackTrace();
@@ -167,6 +172,7 @@ class BookLibrary implements KeeperOfBooks{
         }
         user.takeBook(book.getTitle());
         book.setKeeper(user);
+        book.setDateOfLastChange(LocalDateTime.now());
         rewriteBase(PATH_TO_USERS,users);
         rewriteBase(PATH_TO_LIBRARY,books);
     }
@@ -184,6 +190,7 @@ class BookLibrary implements KeeperOfBooks{
         if (user != null){
             if(user.returnBook(book.getTitle())){
                 book.setKeeper(this);
+                book.setDateOfLastChange(LocalDateTime.now());
                 rewriteBase(PATH_TO_USERS,users);
                 rewriteBase(PATH_TO_LIBRARY,books);
             }
@@ -204,9 +211,12 @@ class BookLibrary implements KeeperOfBooks{
         System.out.println("Books:");
         for (int i=0; i<books.size(); i++){
             System.out.println("Book №: "+(i+1));
+            System.out.println("ISBN: "+books.get(i).getISBN());
             System.out.println("Title: "+books.get(i).getTitle());
             System.out.println("Author: "+books.get(i).getAuthor());
             System.out.println("Keeper: "+(books.get(i).getKeeper().equals(this) ? "" : "User, ID ")+books.get(i).getKeeper().getUniqueValue());
+            System.out.println("Date of creation: "+books.get(i).getDateOfCreation().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+            System.out.println("Date of last change: "+books.get(i).getDateOfLastChange().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         }
     }
 
@@ -230,9 +240,12 @@ class BookLibrary implements KeeperOfBooks{
         for (int i=0; i<books.size(); i++){
             if(!books.get(i).getKeeper().equals(this)){
                 System.out.println("Book №: "+(i+1));
+                System.out.println("ISBN: "+books.get(i).getISBN());
                 System.out.println("Title: "+books.get(i).getTitle());
                 System.out.println("Author: "+books.get(i).getAuthor());
                 System.out.println("Keeper: User, ID"+books.get(i).getKeeper().getUniqueValue());
+                System.out.println("Date of creation: "+books.get(i).getDateOfCreation().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+                System.out.println("Date of last change: "+books.get(i).getDateOfLastChange().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
                 countBooks++;
             }
         }
@@ -262,13 +275,39 @@ class BookLibrary implements KeeperOfBooks{
         }
     }
 
-    public void sortBooks(){
-        Collections.sort(books);
+    public void sortBooks(Comparator<Book> comparator){
+        if (books.size()<2){
+            return;
+        }
+        books.sort(comparator);
         rewriteBase(PATH_TO_LIBRARY,books);
     }
 
-    public void sortUsers(){
-        Collections.sort(users);
+    public void sortBooks(int numberElementsForSort, Comparator<Book> comparator){
+        if(numberElementsForSort < 2 || numberElementsForSort>books.size()){
+            System.out.println("Argument was pointed wrong.");
+            return;
+        }
+        List<Book> subList = books.subList(0,numberElementsForSort);
+        subList.sort(comparator);
+        rewriteBase(PATH_TO_LIBRARY,books);
+    }
+
+    public void sortUsers(Comparator<UserOfLibrary> comparator){
+        if (users.size()<2){
+            return;
+        }
+        users.sort(comparator);
+        rewriteBase(PATH_TO_USERS,users);
+    }
+
+    public void sortUsers(int numberElementsForSort, Comparator<UserOfLibrary> comparator){
+        if(numberElementsForSort < 2 || numberElementsForSort>users.size()){
+            System.out.println("Argument was pointed wrong.");
+            return;
+        }
+        List<UserOfLibrary> subList = users.subList(0,numberElementsForSort);
+        subList.sort(comparator);
         rewriteBase(PATH_TO_USERS,users);
     }
 }

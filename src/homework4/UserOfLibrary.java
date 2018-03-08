@@ -5,9 +5,9 @@ import java.util.List;
 
 class UserOfLibrary implements KeeperOfBooks, Comparable<UserOfLibrary>{
     public static final String TYPE = "USER";
+    private final int ID;
     private String name;
     private int age;
-    private final int ID;
     private List<String> booksTitles = new ArrayList<>();
     UserOfLibrary(int userID, String name, int age){
         ID = userID;

@@ -1,13 +1,23 @@
 package homework4;
 
-class Book implements Comparable<Book>{
+import java.time.LocalDateTime;
+
+class Book{
     public static final String TYPE = "BOOK";
+    private final String ISBN;
     private String title;
     private String author;
     private KeeperOfBooks keeper;
-    Book(String title, String author){
+    private LocalDateTime dateOfCreation = LocalDateTime.now();
+    private LocalDateTime dateOfLastChange;
+    Book(String ISBN, String title, String author){
+        this.ISBN = ISBN;
         this.title = title;
         this.author = author;
+    }
+
+    public String getISBN() {
+        return ISBN;
     }
 
     public String getTitle() {
@@ -26,25 +36,35 @@ class Book implements Comparable<Book>{
         this.keeper = keeper;
     }
 
+    public LocalDateTime getDateOfCreation() {
+        return dateOfCreation;
+    }
+
+    public void setDateOfCreation(LocalDateTime dateOfCreation) {
+        this.dateOfCreation = dateOfCreation;
+    }
+
+    public LocalDateTime getDateOfLastChange() {
+        return dateOfLastChange;
+    }
+
+    public void setDateOfLastChange(LocalDateTime dateOfLastChange) {
+        this.dateOfLastChange = dateOfLastChange;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return obj != null && obj instanceof Book
-                && title.equals(((Book) obj).getTitle())
-                && author.equals(((Book) obj).getAuthor());
+                && ISBN.equals(((Book) obj).getISBN());
     }
 
     @Override
     public int hashCode() {
-        return title.hashCode()+author.hashCode()*2;
+        return Integer.parseInt(ISBN)+title.hashCode()+author.hashCode()*2;
     }
 
     @Override
     public String toString() {
-        return "BOOK\t"+title+"\t"+author+"\t"+keeper.getUniqueValue();
-    }
-
-    @Override
-    public int compareTo(Book o) {
-        return title.compareTo(o.title);
+        return TYPE+"\t"+ISBN+"\t"+title+"\t"+author+"\t"+keeper.getUniqueValue()+"\t"+dateOfCreation+"\t"+dateOfLastChange;
     }
 }

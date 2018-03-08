@@ -4,21 +4,26 @@ public class Main {
     public static void main(String[] args) {
         BookLibrary library = new BookLibrary("BooksLibrary");
 
-        library.addBook(new Book("The Hunger Games","Suzanne Collins"));
-        library.addBook(new Book("The Da Vinci Code","Dan Brown"));
-        library.addBook(new Book("Memoirs of a Geisha","Arthur Golden"));
-        library.addBook(new Book("Alice's Adventures in Wonderland","Lewis Carroll"));
-        library.addBook(new Book("The Picture of Dorian Gray","Oscar Wilde"));
-        library.addBook(new Book("Harry Potter chapter 1", "Joanne Rowling"));
-        library.addBook(new Book("Harry Potter chapter 2", "Joanne Rowling"));
-        library.addBook(new Book("Harry Potter chapter 3", "Joanne Rowling"));
-        library.addBook(new Book("Harry Potter chapter 4", "Joanne Rowling"));
-        library.addBook(new Book("Harry Potter chapter 5", "Joanne Rowling"));
+        library.addBook(new Book("5-10-202030","The Hunger Games","Suzanne Collins"));
+        library.addBook(new Book("9-15-982300","The Da Vinci Code","Dan Brown"));
+        library.addBook(new Book("5-12-101147","Memoirs of a Geisha","Arthur Golden"));
+        library.addBook(new Book("2-17-666687","Alice's Adventures in Wonderland","Lewis Carroll"));
+        library.addBook(new Book("3-90-467558","The Picture of Dorian Gray","Oscar Wilde"));
+        library.addBook(new Book("5-32-758841","Harry Potter and the philosopher's stone.", "Joanne Rowling"));
 
         System.out.println("___________________________________print all books______________________________________");
         library.printAllBooks();
 
-        library.sortBooks();
+        library.sortBooks(new BookISBNComparator());
+//        library.sortBooks(2, new BookISBNComparator());
+//        library.sortBooks(new BookTitleComparator());
+//        library.sortBooks(4, new BookTitleComparator());
+//        library.sortBooks(new BookAuthorComparator());
+//        library.sortBooks(3, new BookAuthorComparator());
+//        library.sortBooks(new BookCreateTimeComparator());
+//        library.sortBooks(5, new BookCreateTimeComparator());
+//        library.sortBooks(new BookLastChangeComparator());
+//        library.sortBooks(6, new BookLastChangeComparator());
         System.out.println("___________________________________print all books in sort order______________________________________");
         library.printAllBooks();
 
@@ -29,7 +34,12 @@ public class Main {
         System.out.println("___________________________________print all users______________________________________");
         library.printAllUsers();
 
-        library.sortUsers();
+        library.sortUsers(new UserIdComparator());
+//        library.sortUsers(2, new UserIdComparator());
+//        library.sortUsers(new UserNameComparator());
+//        library.sortUsers(3, new UserNameComparator());
+//        library.sortUsers(new UserAgeComparator());
+//        library.sortUsers(3,new UserAgeComparator());
         System.out.println("___________________________________print all users in sort order______________________________________");
         library.printAllUsers();
 
@@ -52,11 +62,12 @@ public class Main {
         library.giveBookToUser(library.getBook(1),library.getUser(45));
 
         System.out.println("___________________________________try to return book, which is not taken______________________________________");
-        library.returnBook(library.getBook(7));
-        library.returnBook(library.getBook(10));
+        library.returnBook(library.getBook(3));
+        library.returnBook(library.getBook(5));
+        library.returnBook(library.getBook(25));
 
         System.out.println("___________________________________try to return book, which doesn't exist______________________________________");
-        library.returnBook(new Book("War and Peace","Lev Tolstoy"));
+        library.returnBook(new Book("1-55-778899","War and Peace","Lev Tolstoy"));
 
         System.out.println("___________________________________all users return library books______________________________________");
         library.returnBook(library.getBook(1));
