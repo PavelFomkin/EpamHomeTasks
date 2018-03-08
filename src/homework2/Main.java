@@ -9,24 +9,21 @@ class Main{
         System.out.println();
         myMatrix.printSpirally();
 
-        // for checking a random variant. (task with 12 coins)
-//        new CoinsExpert().detectFake();
-
         // for checking all variants. (task with 12 coins)
-//        CoinsExpert myCoins = new CoinsExpert();
+//        CoinsExpert myCoinsExpert = new CoinsExpert();
 //        int value =1;
 //        for (int i=0; i<2; i++){
 //            for (int j=0; j<12; j++) {
-//                myCoins.changeByMyself(j, value);
-//                myCoins.printArray();
-//                System.out.println(myCoins.detectFake());
+//                myCoinsExpert.changeByMyself(j, value);
+//                myCoinsExpert.printArray();
+//                System.out.println(myCoinsExpert.detectFake());
 //            }
 //            value = 3;
 //        }
 
-        // for checking task about 12 coins.
-//        CoinsExpert test = new CoinsExpert();
-//        test.printArray();
-//        test.detectFake();
+//         for checking a random variant. (task with 12 coins)
+//        CoinsExpert myCoinsExpert = new CoinsExpert();
+//        myCoinsExpert.printArray();
+//        myCoinsExpert.detectFake();
     }
 }
