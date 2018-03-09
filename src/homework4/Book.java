@@ -4,11 +4,12 @@ import java.time.LocalDateTime;
 
 class Book{
     public static final String TYPE = "BOOK";
+    public static final int DIFFERENCE_IN_TIME = 1;
     private final String ISBN;
     private String title;
     private String author;
     private KeeperOfBooks keeper;
-    private LocalDateTime dateOfCreation = LocalDateTime.now();
+    private LocalDateTime dateOfCreation = LocalDateTime.now().plusHours(DIFFERENCE_IN_TIME);
     private LocalDateTime dateOfLastChange;
     Book(String ISBN, String title, String author){
         this.ISBN = ISBN;

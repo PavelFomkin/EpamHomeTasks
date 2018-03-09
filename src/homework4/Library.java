@@ -8,14 +8,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-class BookLibrary implements KeeperOfBooks{
+class Library implements KeeperOfBooks{
     private final String NAME;
     private final Path PATH_TO_LIBRARY;
     private final Path PATH_TO_USERS;
     private final Path PATH_TO_DIRECTORY;
     private List<UserOfLibrary> users = new ArrayList<>();
     private List<Book> books = new ArrayList<>();
-    BookLibrary(String name){
+    Library(String name){
         NAME = name;
         PATH_TO_DIRECTORY = createDirectoryForLibrary(name);
         PATH_TO_LIBRARY = findOrCreateBase(NAME+"(books).txt");
@@ -33,8 +33,8 @@ class BookLibrary implements KeeperOfBooks{
         return defineKeeper(id);
     }
 
-    public Book getBook(int BookNumber) {
-        int index = BookNumber-1;
+    public Book getBook(int bookNumber) {
+        int index = bookNumber-1;
         if (index < 0 || index >= books.size()) {
             return null;
         }
@@ -120,6 +120,33 @@ class BookLibrary implements KeeperOfBooks{
         return null;
     }
 
+    private <T> void rewriteBase(Path path, List<T> list){
+        try (FileWriter fileWriter = new FileWriter(path.toFile(),false)){
+            for(T string : list){
+                fileWriter.write(string.toString()+'\n');
+                fileWriter.flush();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void printBook(Book book){
+        System.out.println("ISBN: "+book.getISBN());
+        System.out.println("Title: "+book.getTitle());
+        System.out.println("Author: "+book.getAuthor());
+        System.out.println("Keeper: "+(book.getKeeper().equals(this) ? "" : "User, ID ")+book.getKeeper().getUniqueValue());
+        System.out.println("Date of creation: "+book.getDateOfCreation().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        System.out.println("Date of last change: "+book.getDateOfLastChange().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+    }
+
+    private void printUser(UserOfLibrary user){
+        System.out.println("User ID: "+user.getID());
+        System.out.println("Name: "+user.getName());
+        System.out.println("Age: "+user.getAge());
+        user.listOfLibraryBooks();
+    }
+
     public void addUser(UserOfLibrary user){
         if (users.contains(user)){
             System.out.println("User with ID"+user.getID()+" has already exist.");
@@ -141,21 +168,10 @@ class BookLibrary implements KeeperOfBooks{
         }
         book.setKeeper(this);
         try (FileWriter fileWriter = new FileWriter(PATH_TO_LIBRARY.toFile(),true)){
+            book.setDateOfLastChange(LocalDateTime.now().plusHours(Book.DIFFERENCE_IN_TIME));
             fileWriter.write(book.toString()+'\n');
             fileWriter.flush();
-            book.setDateOfLastChange(LocalDateTime.now());
             books.add(book);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private <T> void rewriteBase(Path path, List<T> list){
-        try (FileWriter fileWriter = new FileWriter(path.toFile(),false)){
-            for(T string : list){
-                fileWriter.write(string.toString()+'\n');
-                fileWriter.flush();
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -172,7 +188,7 @@ class BookLibrary implements KeeperOfBooks{
         }
         user.takeBook(book.getTitle());
         book.setKeeper(user);
-        book.setDateOfLastChange(LocalDateTime.now());
+        book.setDateOfLastChange(LocalDateTime.now().plusHours(Book.DIFFERENCE_IN_TIME));
         rewriteBase(PATH_TO_USERS,users);
         rewriteBase(PATH_TO_LIBRARY,books);
     }
@@ -190,7 +206,7 @@ class BookLibrary implements KeeperOfBooks{
         if (user != null){
             if(user.returnBook(book.getTitle())){
                 book.setKeeper(this);
-                book.setDateOfLastChange(LocalDateTime.now());
+                book.setDateOfLastChange(LocalDateTime.now().plusHours(Book.DIFFERENCE_IN_TIME));
                 rewriteBase(PATH_TO_USERS,users);
                 rewriteBase(PATH_TO_LIBRARY,books);
             }
@@ -220,6 +236,55 @@ class BookLibrary implements KeeperOfBooks{
         }
     }
 
+    public void printBooks(int numberOfBooks){
+        if (books.size()==0){
+            System.out.println("The library has no books.");
+            return;
+        }
+        if(numberOfBooks < 1){
+            System.out.println("Invalid value.");
+            return;
+        }
+        if(numberOfBooks > books.size()){
+            System.out.println("Number of books int the library: "+books.size());
+            numberOfBooks = books.size();
+        }
+        if(numberOfBooks==1){
+            printBook(books.get(0));
+        } else {
+            System.out.println("First "+numberOfBooks+" books:");
+            for (int i=0; i<numberOfBooks; i++){
+                System.out.println("Book №: "+(i+1));
+                printBook(books.get(i));
+            }
+        }
+    }
+
+    public void printBook(int bookNumber){
+        Book book = getBook(bookNumber);
+        if(book == null){
+            System.out.println("The library doesn't have this book.");
+            return;
+        }
+        System.out.println("Book №: "+(bookNumber));
+        printBook(book);
+    }
+
+    public void printTakenBooks(){
+        System.out.println("The taken books by users:");
+        boolean moreThanOne = false;
+        for (int i=0; i<books.size(); i++){
+            if(!books.get(i).getKeeper().equals(this)){
+                System.out.println("Book №: "+(i+1));
+                printBook(books.get(i));
+                moreThanOne = true;
+            }
+        }
+        if(!moreThanOne){
+            System.out.println("No such books.");
+        }
+    }
+
     public void printAllUsers(){
         if (users.size()==0){
             System.out.println("The library has no users.");
@@ -234,24 +299,36 @@ class BookLibrary implements KeeperOfBooks{
         }
     }
 
-    public void printTakenBooks(){
-        System.out.println("The taken books by users:");
-        int countBooks = 0;
-        for (int i=0; i<books.size(); i++){
-            if(!books.get(i).getKeeper().equals(this)){
-                System.out.println("Book №: "+(i+1));
-                System.out.println("ISBN: "+books.get(i).getISBN());
-                System.out.println("Title: "+books.get(i).getTitle());
-                System.out.println("Author: "+books.get(i).getAuthor());
-                System.out.println("Keeper: User, ID"+books.get(i).getKeeper().getUniqueValue());
-                System.out.println("Date of creation: "+books.get(i).getDateOfCreation().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-                System.out.println("Date of last change: "+books.get(i).getDateOfLastChange().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-                countBooks++;
+    public void printUsers(int numberOfUsers){
+        if (users.size()==0){
+            System.out.println("The library has no users.");
+            return;
+        }
+        if(numberOfUsers < 1){
+            System.out.println("Invalid value.");
+            return;
+        }
+        if(numberOfUsers > users.size()){
+            System.out.println("Number of users int the library: "+users.size());
+            numberOfUsers = users.size();
+        }
+        if(numberOfUsers==1){
+            printUser(users.get(0));
+        } else {
+            System.out.println("First "+numberOfUsers+" users:");
+            for (int i=0; i<numberOfUsers; i++){
+                printUser(users.get(i));
             }
         }
-        if(countBooks==0){
-            System.out.println("No such books.");
+    }
+
+    public void printUser(int userID){
+        UserOfLibrary user = defineKeeper(userID);
+        if (user==null){
+            System.out.println("The library doesn't have this user.");
+            return;
         }
+        printUser(user);
     }
 
     public void printUsersWithLibraryBooks(){
@@ -260,17 +337,14 @@ class BookLibrary implements KeeperOfBooks{
             return;
         }
         System.out.println("Users with library books:");
-        int countUsers = 0;
+        boolean moreThanOne = false;
         for (UserOfLibrary user : users){
             if (user.getCountOfBooks()>0){
-                System.out.println("User ID: "+user.getID());
-                System.out.println("Name: "+user.getName());
-                System.out.println("Age: "+user.getAge());
-                user.listOfLibraryBooks();
-                countUsers++;
+                printUser(user);
+                moreThanOne = true;
             }
         }
-        if(countUsers==0){
+        if(!moreThanOne){
             System.out.println("No such users.");
         }
     }
