@@ -120,6 +120,15 @@ class Library implements KeeperOfBooks{
         return null;
     }
 
+    private Book defineKeeper(String bookISBN){
+        for (Book book : books){
+            if(book.getISBN().equals(bookISBN)){
+                return book;
+            }
+        }
+        return null;
+    }
+
     private <T> void rewriteBase(Path path, List<T> list){
         try (FileWriter fileWriter = new FileWriter(path.toFile(),false)){
             for(T string : list){
@@ -267,6 +276,15 @@ class Library implements KeeperOfBooks{
             return;
         }
         System.out.println("Book №: "+(bookNumber));
+        printBook(book);
+    }
+
+    public void printBook(String userISBN){
+        Book book = defineKeeper(userISBN);
+        if (book==null){
+            System.out.println("The library doesn't have this book.");
+            return;
+        }
         printBook(book);
     }
 

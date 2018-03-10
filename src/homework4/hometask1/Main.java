@@ -21,6 +21,7 @@ public class Main {
         library.printBooks(2);
         System.out.println("___________________________________print a certain book______________________________________");
         library.printBook(6);
+        library.printBook("3-90-467558");
 
         library.sortBooks(new BookISBNComparator());
 //        library.sortBooks(2, new BookISBNComparator());
