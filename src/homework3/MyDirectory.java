@@ -17,6 +17,9 @@ class MyDirectory {
         this.name = name;
         this.permissionCreateDirectory = permissionCreateDirectory;
         if (!Files.exists(currentPath) && !Files.isDirectory(currentPath)){
+            if(permissionCreateDirectory){
+                createDirectory(currentPath);
+            }
             currentPath = Paths.get(searchExistsDirectory(currentPath).toString());
         }
         showCurrentDirectory();
@@ -100,6 +103,13 @@ class MyDirectory {
             else {
                 System.out.println("The name of the "+name+" isn't legal.");
             }
+        }
+    }
+    private void createDirectory(Path path){
+        try {
+            Files.createDirectories(path);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     private void deleteDirectory(String label){

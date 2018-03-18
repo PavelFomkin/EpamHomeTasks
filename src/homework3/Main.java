@@ -18,7 +18,7 @@ public class Main {
             switch (answer){
                 case "1":
                     String UserName = System.getProperty("user.name");
-                    Path pathDirForMp3 = Paths.get("");
+                    Path pathDirForMp3 = Paths.get("mp3");
                     Path pathDir = Paths.get(pathDirForMp3.toAbsolutePath().getRoot().toString(), "Users", UserName, "AppData", "Local", "Google", "Chrome", "User Data", "Default", "Media Cache"); // default path (for windows)
                     MyDirectory cacheDirectory = new MyDirectory(pathDir, "directory with Chrome cache", false);
                     MyDirectory directoryForMp3 = new MyDirectory(pathDirForMp3, "directory for mp3 files", true);
