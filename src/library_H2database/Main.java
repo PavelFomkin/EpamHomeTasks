@@ -1,7 +1,13 @@
-package homework4.library_H2database;
+package library_H2database;
 
 public class Main {
     public static void main(String[] args) {
+
+        /*
+        *   This application works with H2 database.
+        *   It realize a simple library of books.
+        */
+
         try {
             H2Database h2 = new H2Database();
             System.out.println("____________________________print all authors____________________________");
