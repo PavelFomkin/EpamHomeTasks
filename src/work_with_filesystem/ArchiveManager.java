@@ -1,4 +1,4 @@
-package homework3;
+package work_with_filesystem;
 
 import java.io.*;
 import java.nio.file.Files;
