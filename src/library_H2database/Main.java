@@ -5,7 +5,7 @@ public class Main {
 
         /*
         *   This application works with H2 database.
-        *   It realize a simple library of books.
+        *   It implements a simple library of books.
         */
 
         try {
