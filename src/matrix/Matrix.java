@@ -1,4 +1,4 @@
-package homework2;
+package matrix;
 
 public class Matrix {
     private int[][] arr;
