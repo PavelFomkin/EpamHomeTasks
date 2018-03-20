@@ -1,4 +1,4 @@
-package homework4.hometask2;
+package errors;
 
 import java.math.BigInteger;
 import java.util.Random;

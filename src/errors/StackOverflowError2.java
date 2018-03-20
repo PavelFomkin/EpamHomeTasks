@@ -1,4 +1,4 @@
-package homework4.hometask2;
+package errors;
 
 public class StackOverflowError2 {
     void method1 (){
