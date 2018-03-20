@@ -1,7 +1,13 @@
-package homework4.hometask1;
+package library_by_textfile;
 
 public class Main {
     public static void main(String[] args) {
+
+        /*
+        *   This application realize simple database.
+        *   All information keeps inside the text files.
+        */
+
         Library library = new Library("MyLibrary");
 
         library.addBook(new Book("5-10-202030","The Hunger Games","Suzanne Collins"));
