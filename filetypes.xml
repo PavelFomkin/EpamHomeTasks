@@ -2,6 +2,7 @@
   <component name="FileTypeManager" version="17">
     <extensionMap>
       <mapping pattern="Main" type="CLASS" />
+      <mapping ext="db" type="SQL" />
     </extensionMap>
   </component>
 </application>
