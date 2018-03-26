@@ -24,6 +24,7 @@ class Mp3Manager {
         }
         try {
             if(Files.isReadable(path) && Files.size(from.getPath())<= MAX_SIZE_OF_PART){
+                // also we can add other checks
                 return path.getFileName().toString().matches("^f_[a-zA-Z0-9]+");
             }
         } catch (IOException e) {

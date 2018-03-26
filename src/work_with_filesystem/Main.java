@@ -9,9 +9,9 @@ public class Main {
 
     /*
     *   This application work with file system. It has 3 different part:
-    *   Part 1: mp3 manager, it finds files by path to audio cache GoogleChrome and save it in the folder of project.
-    *   Part 2: archive manager, it can zip and unzip selected files with possibility to delete old files.
-    *   Part 3: print manager, it let you show and print files and folder by sorted order.
+    *   Part 1: mp3 manager, it finds files by the audio cache GoogleChrome path and save it in the folder of the project.
+    *   Part 2: archive manager, it can zip and unzip selected files with possibility to delete the old files.
+    *   Part 3: print manager, it let you print files and folder by sorted order.
     *   Paths for applications you can change* at run time or before.
     *   * - if you have the permission (this permission you can set before start).
     */
